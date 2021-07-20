@@ -1,20 +1,25 @@
+import nltk
 import fileinput
 import re
 import fitz 
 
-
-
 class archivo ():
-    #def readPDF (self):
+    def __init__(self, direccion_archivo, archivo_nuevo):
+        self.direccion_archivo = direccion_archivo
+        self.archivo_nuevo = archivo_nuevo
+        self.text = self.readPDF()
         
-    with fitz.open("a.pdf") as doc:
-        text = ""
+    def readPDF (self):
+        
+        doc = fitz.open(self.direccion_archivo)
+        self.text = ""
         for page in doc:
-            text += page.getText()
+            self.text += page.getText()
     
-    print(text)
-    open('DocModificable.txt', 'w').write(text)
-    
+    def imprimir_archivo(self):    
+        print(self.text)
+        open('self.archivo_nuevo', 'w').write(self.text)
+        
     
     #funcion leer archivo y crear otro para modificar
     #string = open('DocModificable').read()
@@ -22,6 +27,7 @@ class archivo ():
     
     #remove special characters
     #def removeSpecialCharacters ():
+    """
     string = open('DocModificable.txt').read()
     result = re.sub('[^a-zA-Z0-9\n\.]', ' ', string)
     open('DocModificable.txt', 'w').write(result)
@@ -35,4 +41,7 @@ class archivo ():
         result = ''.join([i for i in line if not i.isdigit()])
         #print (DocModificable.txt)
         
-        
+     """
+texto = archivo("a.pdf", 'DocModificable.txt')
+texto.readPDF()
+texto.imprimir_archivo()
