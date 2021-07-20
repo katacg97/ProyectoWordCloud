@@ -1,6 +1,7 @@
 import fileinput
 import re
 import fitz
+import collections
 import spacy
 import nltk
 from nltk.corpus import stopwords
@@ -14,6 +15,7 @@ class archivo ():
         self.archivo_nuevo = archivo_nuevo
         self.text = self.readPDF()
         self.token = []
+        self.frecuencia = {}
         
     def readPDF (self):
         
@@ -70,6 +72,8 @@ class archivo ():
         for word in self.token:
             print(word)          
        
+    def contador(self):
+        self.frecuencia = collections.Counter(self.token)
      
 texto = archivo("peterpan.pdf", 'DocModificable.txt')
 texto.readPDF()
@@ -81,3 +85,8 @@ texto.eliminar_stop_words()
 print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
 print('\nTexto modificado\n')
 texto.imprimir_token()
+texto.contador()
+print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
+print('\nFrecuencia de palabras\n')
+print(texto.frecuencia)
+print('Fin')
