@@ -2,6 +2,9 @@ import fileinput
 import re
 import fitz
 import spacy
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
 
 nlp = spacy.load("es_core_news_sm") 
 
@@ -10,6 +13,7 @@ class archivo ():
         self.direccion_archivo = direccion_archivo
         self.archivo_nuevo = archivo_nuevo
         self.text = self.readPDF()
+        self.token = []
         
     def readPDF (self):
         
@@ -54,7 +58,17 @@ class archivo ():
         tokens = nlp(self.text)
         for word in tokens:
             self.text = " ".join([word.lemma_ for word in tokens])
-           
+    
+    def eliminar_stop_words(self):
+        self.text = self.text.lower()
+        temp = self.text.split()
+        for word in temp:
+            if word not in stopwords.words("spanish"):
+                self.token.append(word)
+
+    def imprimir_token(self):
+        for word in self.token:
+            print(word)          
        
      
 texto = archivo("peterpan.pdf", 'DocModificable.txt')
@@ -63,6 +77,7 @@ texto.imprimir_archivo()
 texto.remove_Special_Characters()
 texto.remove_Numbers()
 texto.raiz_de_palabras()
+texto.eliminar_stop_words()
 print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
 print('\nTexto modificado\n')
-texto.imprimir_archivo()
+texto.imprimir_token()
