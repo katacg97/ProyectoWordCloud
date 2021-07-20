@@ -1,7 +1,9 @@
-#import nltk
 import fileinput
 import re
-import fitz 
+import fitz
+import spacy
+
+nlp = spacy.load("es_core_news_sm") 
 
 class archivo ():
     def __init__(self, direccion_archivo, archivo_nuevo):
@@ -47,11 +49,20 @@ class archivo ():
         string = open('archivo_nuevo.txt').read()
         result = re.sub(' +', ' ', string )
         open('archivo_nuevo.txt', 'w').write(result)
+    
+    def raiz_de_palabras(self):
+        tokens = nlp(self.text)
+        for word in tokens:
+            self.text = " ".join([word.lemma_ for word in tokens])
            
        
      
-texto = archivo("a.pdf", 'DocModificable.txt')
+texto = archivo("peterpan.pdf", 'DocModificable.txt')
 texto.readPDF()
 texto.imprimir_archivo()
 texto.remove_Special_Characters()
 texto.remove_Numbers()
+texto.raiz_de_palabras()
+print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
+print('\nTexto modificado\n')
+texto.imprimir_archivo()
