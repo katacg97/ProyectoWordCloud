@@ -83,24 +83,21 @@ class archivo ():
             print(word)          
        
     def contador(self):
-        self.frecuencia = collections.Counter(self.token)
-        
-        
+        self.frecuencia = collections.Counter(self.token)  
       
     def lista_a_DataFrame(self):
         
         c = Counter(self.frecuencia)
         self.dataFrameDefinitivo = pd.DataFrame.from_records(list(dict(c).items()), columns=['Palabra','Contador'])
+        self.dataFrameDefinitivo.set_index('Palabra', inplace = True)
         print(self.dataFrameDefinitivo)
            
     def Word_Cloud(self):
-        
-        palabras=self.dataFrameDefinitivo
-        wordcloud = WordCloud(width = 800, height = 800, background_color ='white', stopwords = stopwords, min_font_size = 10).generate(palabras)
- 
+        wordcloud = WordCloud()
+        wordcloud.generate_from_frequencies(frequencies=self.frecuencia)
         # plot the WordCloud image                      
         plt.figure(figsize = (8, 8), facecolor = None)
-        plt.imshow(wordcloud)
+        plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
         plt.tight_layout(pad = 0)
          
@@ -124,8 +121,6 @@ texto.contador()
 print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
 print('\nFrecuencia de palabras\n')
 print(texto.frecuencia)
-print('Fin')
-
 print('Data Frame')
-texto.lista_a_DataFrame()
-#texto.Word_Cloud()
+#texto.lista_a_DataFrame()
+texto.Word_Cloud()
