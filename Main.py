@@ -30,14 +30,19 @@ class archivo ():
     def readPDF (self):
         
         doc = fitz.open(self.direccion_archivo)
-        self.text = ""
+        self.textA = ""
+        self.textB = ""
         self.paginas= doc.pageCount
+        mitad_doc= round(self.paginas/2)
         
         if (self.threadID==1):
             
             for page in doc:
-                self.text += page.getText()
-    
+                self.textA += page.getText(from_page = 0, to_page=mitad_doc)
+        else :
+            for page in doc:
+                self.textB += page.getText(from_page = mitad_doc+1, to_page=self.paginas)
+            
     def imprimir_archivo(self):    
         print(self.text)
         open('archivo_nuevo.txt', 'w').write(self.text)
@@ -110,6 +115,7 @@ class archivo ():
             self.textoATrabajar = self.textoA
         else :
             self.textoATrabajar= self.textoB
+        
             
         
         
