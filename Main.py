@@ -13,6 +13,11 @@ from pandas import DataFrame
 from collections import Counter
 import threading
 import time
+from PIL import Image
+import numpy as np
+import os
+from os import path
+
 
 from test.test_tools.test_unparse import for_else
 nltk.download('stopwords')
@@ -119,7 +124,8 @@ class archivo ():
            
     def Word_Cloud(self):
         
-        wordcloud = WordCloud(background_color="#e5e5e5", max_font_size=100)
+        mask=np.array(Image.open(path.join("peterpanImage.jpg")))
+        wordcloud = WordCloud( background_color="#e5e5e5", mask=mask, max_font_size=100)
         wordcloud.generate_from_frequencies(frequencies=self.frecuencia)
         
         # plot the WordCloud image                      
