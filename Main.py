@@ -13,7 +13,7 @@ from pandas import DataFrame
 from collections import Counter
 import threading
 import time
-#from prueba2 import myThread
+
 from test.test_tools.test_unparse import for_else
 nltk.download('stopwords')
 
@@ -48,25 +48,17 @@ class archivo ():
         print(self.textoATrabajar)
         open('archivo_nuevo.txt', 'w').write(self.textoATrabajar)
         
-    
-    #funcion leer archivo y crear otro para modificar
-    #string = open('DocModificable').read()
-    #open('DocModificable', 'w').write(string)
-    
+            
     #remove special characters
     def remove_Special_Characters (self):
     
-        #string = open('archivo_nuevo.txt').read()
-        result = re.sub('\!|\'|\?|\-|\.|\,|\:', '', self.textoATrabajar)
-        #open('archivo_nuevo.txt', 'w').write(result)
+        result = re.sub('|\!|\'|\?|\-|\.|\,|\:', '', self.textoATrabajar)
         self.textoATrabajar=result       
-        #print (result)
    
     #funcion quitar numeros
     def remove_Numbers (self): 
 
         pattern = r'[0-9]'
-
         string = re.sub(pattern, '', self.textoATrabajar)
         self.textoATrabajar=string
 
@@ -74,9 +66,7 @@ class archivo ():
     #borrar espacios en blanco multiples
     def remove_Blank_Spaces (self):
         
-        string = open('archivo_nuevo.txt').read()
-        result = re.sub(' +', ' ', self.textoATrabajar )
-        #open('archivo_nuevo.txt', 'w').write(result)
+        result = re.sub(' +', ' ', self.textoATrabajar )      
         self.textoATrabajar=result
     
     def raiz_de_palabras(self):
@@ -85,12 +75,15 @@ class archivo ():
             self.textoATrabajar = " ".join([word.lemma_ for word in tokens])
     
     def eliminar_stop_words(self,threadID):
+        listCaracteresEspeciales=[]
+        listCaracteresEspeciales = ['a', 'b']
         self.textoATrabajar = self.textoATrabajar.lower()
         temp = self.textoATrabajar.split()
         for word in temp:
             if word not in stopwords.words("spanish"):
                 self.token.append(word)
-        
+            
+            
         if threadID==1:
             self.tokenA=self.token
             
@@ -102,29 +95,12 @@ class archivo ():
             print(word)          
        
     def contador(self):
-        print(type(self.token))
-        print(type(self.tokenA))
-        print(type(self.tokenB))
-        self.token = self.tokenB+self.tokenA
-        #self.token.extend(self.tokenA)
-        self.frecuencia = collections.Counter(self.token)  
-        #self.imprimir_token()
-        print(type(self.token))
         
-      
-    def lista_a_DataFrame(self):
+        self.token = self.tokenB+self.tokenA        
+        self.frecuencia = collections.Counter(self.token)        
+               
+    def proceso_Completo(self, threadID):      
         
-        c = Counter(self.frecuencia)
-        self.dataFrameDefinitivo = pd.DataFrame.from_records(list(dict(c).items()), columns=['Palabra','Contador'])
-        self.dataFrameDefinitivo.set_index('Palabra', inplace = True)
-        print(self.dataFrameDefinitivo)
-        
-    def proceso_Completo(self, threadID):
-        
-        
-        
-        #112 y 113 van a ir en el main
-        #texto = archivo("peterpan.pdf", 'DocModificable.txt')
         self.readPDF(threadID)
         
         if threadID==1:
@@ -132,17 +108,18 @@ class archivo ():
             
         else :
             self.textoATrabajar= self.textoB
-        
-        #texto.imprimir_archivo()
+               
         texto.remove_Special_Characters()   
         texto.remove_Numbers()
         texto.remove_Blank_Spaces()
         texto.raiz_de_palabras()
         texto.eliminar_stop_words(threadID)
+        texto.imprimir_archivo()
         
            
     def Word_Cloud(self):
-        wordcloud = WordCloud()
+        
+        wordcloud = WordCloud(background_color="#e5e5e5", max_font_size=100)
         wordcloud.generate_from_frequencies(frequencies=self.frecuencia)
         
         # plot the WordCloud image                      
@@ -164,29 +141,17 @@ class myThread (threading.Thread):
         
       
     def run(self):
-        print ("Starting " + self.name)
-        #print_time(self.name, 5, self.counter)
-        self.objeto.proceso_Completo(self.threadID)
-        
+        print ("Starting " + self.name)       
+        self.objeto.proceso_Completo(self.threadID)      
         print ("Exiting " + self.name)   
         
-        
-        
-        
-        
-
 
 texto = archivo("peterpan.pdf", 'DocModificable.txt')
-#texto.readPDF()
 
 # Create new threads
 #(threadID, name, counter)
 thread1 = myThread(1, "Parte 1", 1, texto)
 thread2 = myThread(2, "Parte 2", 2, texto)
-"""
-thread1 = myThread("Parte 1", 1)
-thread2 = myThread("Parte 2", 2)
-"""
 
 # Start new Threads
 thread1.start()
@@ -195,12 +160,10 @@ thread2.start()
 thread1.join()
 thread2.join()
 
-
-#print('Data Frame')
-#texto.lista_a_DataFrame()
-
 texto.contador()
-print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
+
+print('\n /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
 print('\nFrecuencia de palabras\n')
 print(texto.frecuencia)
+
 texto.Word_Cloud()
