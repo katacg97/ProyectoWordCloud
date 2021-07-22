@@ -13,6 +13,8 @@ from pandas import DataFrame
 from collections import Counter
 import threading
 import time
+from prueba2 import myThread
+from test.test_tools.test_unparse import for_else
 nltk.download('stopwords')
 
 nlp = spacy.load("es_core_news_sm") 
@@ -29,8 +31,12 @@ class archivo ():
         
         doc = fitz.open(self.direccion_archivo)
         self.text = ""
-        for page in doc:
-            self.text += page.getText()
+        self.paginas= doc.pageCount
+        
+        if (self.threadID==1):
+            
+            for page in doc:
+                self.text += page.getText()
     
     def imprimir_archivo(self):    
         print(self.text)
@@ -93,6 +99,20 @@ class archivo ():
         self.dataFrameDefinitivo = pd.DataFrame.from_records(list(dict(c).items()), columns=['Palabra','Contador'])
         self.dataFrameDefinitivo.set_index('Palabra', inplace = True)
         print(self.dataFrameDefinitivo)
+        
+    def proceso_Completo(self):
+        
+        self.textoATrabajar = ""
+        texto = archivo("peterpan.pdf", 'DocModificable.txt')
+        texto.readPDF()
+        
+        if self.threadID==1:
+            self.textoATrabajar = self.textoA
+        else :
+            self.textoATrabajar= self.textoB
+            
+        
+        
            
     def Word_Cloud(self):
         wordcloud = WordCloud()
@@ -116,6 +136,22 @@ class myThread (threading.Thread):
     def run(self):
         print ("Starting " + self.name)
         #print_time(self.name, 5, self.counter)
+        texto = archivo("peterpan.pdf", 'DocModificable.txt')
+        texto.readPDF()
+        texto.imprimir_archivo()
+        texto.remove_Special_Characters()
+        texto.remove_Numbers()
+        texto.remove_Blank_Spaces()
+        
+        texto.raiz_de_palabras()
+        texto.eliminar_stop_words()
+        print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
+        print('\nTexto modificado\n')
+        texto.imprimir_token()
+        texto.contador()
+        print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
+        print('\nFrecuencia de palabras\n')
+        print(texto.frecuencia)
         
         print ("Exiting " + self.name)   
         
@@ -123,7 +159,7 @@ class myThread (threading.Thread):
         
         
         
-        
+"""      
 texto = archivo("peterpan.pdf", 'DocModificable.txt')
 texto.readPDF()
 texto.imprimir_archivo()
@@ -140,11 +176,16 @@ texto.contador()
 print('/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
 print('\nFrecuencia de palabras\n')
 print(texto.frecuencia)
-
+"""
 
 # Create new threads
+#(threadID, name, counter)
 thread1 = myThread(1, "Parte 1", 1)
 thread2 = myThread(2, "Parte 2", 2)
+"""
+thread1 = myThread("Parte 1", 1)
+thread2 = myThread("Parte 2", 2)
+"""
 
 # Start new Threads
 thread1.start()
@@ -156,4 +197,4 @@ thread2.join()
 
 #print('Data Frame')
 #texto.lista_a_DataFrame()
-texto.Word_Cloud()
+#texto.Word_Cloud()
