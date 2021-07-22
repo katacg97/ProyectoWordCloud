@@ -1,3 +1,5 @@
+
+## @knitr Item1 
 import fileinput
 import re
 import fitz
@@ -18,12 +20,10 @@ import numpy as np
 import os
 from os import path
 
-
-from test.test_tools.test_unparse import for_else
 nltk.download('stopwords')
 
 nlp = spacy.load("es_core_news_sm") 
-
+## @knitr Item2
 class archivo ():
     def __init__(self, direccion_archivo, archivo_nuevo):
         self.direccion_archivo = direccion_archivo
@@ -135,7 +135,7 @@ class archivo ():
         plt.tight_layout(pad = 0)
          
         plt.show()
-        
+ ## @knitr Item3       
 class myThread (threading.Thread):
     
     def __init__(self, threadID, name, counter,objeto):
@@ -151,7 +151,7 @@ class myThread (threading.Thread):
         self.objeto.proceso_Completo(self.threadID)      
         print ("Exiting " + self.name)   
         
-
+## @knitr Item4
 texto = archivo("peterpan.pdf", 'DocModificable.txt')
 
 # Create new threads
@@ -165,7 +165,7 @@ thread2.start()
 
 thread1.join()
 thread2.join()
-
+## @knitr Item5
 texto.contador()
 
 print('\n /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
