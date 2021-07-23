@@ -1,5 +1,3 @@
-
-## @knitr Item1 
 import fileinput
 import re
 import fitz
@@ -20,10 +18,12 @@ import numpy as np
 import os
 from os import path
 
+
+
 nltk.download('stopwords')
 
 nlp = spacy.load("es_core_news_sm") 
-## @knitr Item2
+
 class archivo ():
     def __init__(self, direccion_archivo, archivo_nuevo):
         self.direccion_archivo = direccion_archivo
@@ -125,7 +125,7 @@ class archivo ():
     def Word_Cloud(self):
         
         mask=np.array(Image.open(path.join("peterpanImage.jpg")))
-        wordcloud = WordCloud( background_color="#e5e5e5", mask=mask, max_font_size=100)
+        wordcloud = WordCloud( background_color="#e5e5e5", max_font_size=100)
         wordcloud.generate_from_frequencies(frequencies=self.frecuencia)
         
         # plot the WordCloud image                      
@@ -135,7 +135,7 @@ class archivo ():
         plt.tight_layout(pad = 0)
          
         plt.show()
- ## @knitr Item3       
+        
 class myThread (threading.Thread):
     
     def __init__(self, threadID, name, counter,objeto):
@@ -151,8 +151,8 @@ class myThread (threading.Thread):
         self.objeto.proceso_Completo(self.threadID)      
         print ("Exiting " + self.name)   
         
-## @knitr Item4
-texto = archivo("peterpan.pdf", 'DocModificable.txt')
+
+texto = archivo("CasoCochinilla.pdf", 'DocModificable.txt')
 
 # Create new threads
 #(threadID, name, counter)
@@ -165,7 +165,7 @@ thread2.start()
 
 thread1.join()
 thread2.join()
-## @knitr Item5
+
 texto.contador()
 
 print('\n /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////')
